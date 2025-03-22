@@ -9,6 +9,7 @@ import sliderImage6 from '../../assets/home/06.png'
 function Banner() {
   return (
     <>
+
       <Carousel>
         <div>
           <img src={sliderImage1} />

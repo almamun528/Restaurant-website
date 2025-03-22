@@ -8,8 +8,9 @@ function MainLayout() {
     <>
       <section>
         <NavBar />
-
-        <Outlet />
+        <main className="">
+          <Outlet />
+        </main>
         <Footer />
       </section>
     </>
