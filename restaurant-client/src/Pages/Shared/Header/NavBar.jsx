@@ -57,6 +57,7 @@ function NavBar() {
       </div>
       <br />
       <br />
+     <div className="w-2 h-[17px]"></div>
     </>
   );
 }
