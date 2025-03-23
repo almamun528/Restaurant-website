@@ -10,6 +10,7 @@ function MenuItems({ item }) {
       <div>
         <h3 className="text-2xl ">{name}-------</h3>
         <p>{recipe}</p>
+        <p>category: {category} </p>
         <p className="font-semibold text-yellow-400">$ {price}</p>
       </div>
     </div>
