@@ -7,7 +7,9 @@ import { RouterProvider } from "react-router-dom";
 createRoot(document.getElementById("root")).render(
   <section className="max-w-screen-xl mx-auto">
     <StrictMode>
-      <RouterProvider router={router} />
+     
+        <RouterProvider router={router} />
+    
     </StrictMode>
   </section>
 );

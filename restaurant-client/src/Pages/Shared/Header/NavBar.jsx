@@ -5,10 +5,10 @@ function NavBar() {
   const menuItems = (
     <>
       <li>
-        <Link>Home</Link>
+        <Link to="/">Home</Link>
       </li>
       <li>
-        <Link>Item 2</Link>
+        <Link to="/menu">Menu</Link>
       </li>
     </>
   );
@@ -37,7 +37,7 @@ function NavBar() {
             </div>
             <ul
               tabIndex={0}
-              className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
+              className="menu menu-sm dropdown-content bg-base-100 text-black rounded-box z-1 mt-3 w-52 p-2 shadow"
             >
               {/* Menu Items */}
               {menuItems}
@@ -57,7 +57,7 @@ function NavBar() {
       </div>
       <br />
       <br />
-     <div className="w-2 h-[17px]"></div>
+      <div className="w-2 md:h-[15px] lg:h-[17px]"></div>
     </>
   );
 }
