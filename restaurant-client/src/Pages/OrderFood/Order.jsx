@@ -1,56 +1,63 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import coverImage from "../../assets/shop/Order.jpg";
 import SectionCover from "../../Components/SectionCover";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
 import UseMenu from "../../Hooks/UseMenu";
 import OrderTab from "./OrderTab";
+import { useParams } from "react-router-dom";
 
 export default function Order() {
-  const [tabIndex, setTabIndex] = useState(0);
+  const categories = ["desserts", "soup", "salad", "pizza", "offered"];
+  const { category } = useParams(); // Get category from URL params
   const [menu] = UseMenu();
-  const desserts = menu.filter((item) => item.category === "dessert");
-  const soup = menu.filter((item) => item.category === "soup");
-  const salad = menu.filter((item) => item.category === "salad");
-  const pizza = menu.filter((item) => item.category === "pizza");
-  const offered = menu.filter((item) => item.category === "offered");
+
+  // Find initial index based on category in URL
+  const initialIndex = categories.indexOf(category);
+  const [tabIndex, setTabIndex] = useState(
+    initialIndex !== -1 ? initialIndex : 0
+  );
+
+  useEffect(() => {
+    if (category) {
+      const index = categories.indexOf(category);
+      setTabIndex(index !== -1 ? index : 0);
+    }
+  }, [category]);
+
+  const filteredMenu = {
+    desserts: menu.filter((item) => item.category === "desserts"),
+    soup: menu.filter((item) => item.category === "soup"),
+    salad: menu.filter((item) => item.category === "salad"),
+    pizza: menu.filter((item) => item.category === "pizza"),
+    offered: menu.filter((item) => item.category === "offered"),
+  };
+
   return (
     <>
       <section>
-        <SectionCover img={coverImage} title={"Order Food"} />
+        <SectionCover img={coverImage} title="Order Food" />
         <br />
         <main className="md:my-10 my-3">
           <Tabs
-            defaultIndex={tabIndex}
-            onSelect={(index) => console.log(index)}
+            selectedIndex={tabIndex}
+            onSelect={(index) => setTabIndex(index)}
           >
-            <div className=" text-center font-semibold mb-4">
+            <div className="text-center font-semibold mb-4">
               <TabList>
-                <Tab>Salad</Tab>
-                <Tab>Pizza</Tab>
-                <Tab>Dessert</Tab>
-                <Tab>Offered</Tab>
-                <Tab>Soup</Tab>
+                {categories.map((cat, index) => (
+                  <Tab key={index}>
+                    {cat.charAt(0).toUpperCase() + cat.slice(1)}
+                  </Tab>
+                ))}
               </TabList>
             </div>
-            <TabPanel>
-              <OrderTab items={salad} key={salad?._id} />
-              {/* send salad to order tab */}
-            </TabPanel>
 
-            <TabPanel>
-              <OrderTab items={pizza} key={pizza?._id} />
-            </TabPanel>
-
-            <TabPanel>
-              <OrderTab items={desserts} key={desserts._id} />
-            </TabPanel>
-            <TabPanel>
-              <OrderTab items={offered} key={offered._id} />
-            </TabPanel>
-            <TabPanel>
-              <OrderTab items={soup} key={soup._id} />
-            </TabPanel>
+            {categories.map((cat, index) => (
+              <TabPanel key={index}>
+                <OrderTab items={filteredMenu[cat]} />
+              </TabPanel>
+            ))}
           </Tabs>
         </main>
       </section>
