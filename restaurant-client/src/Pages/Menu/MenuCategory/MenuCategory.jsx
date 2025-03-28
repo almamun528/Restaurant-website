@@ -4,7 +4,7 @@ import SectionCover from "../../../Components/SectionCover";
 import { Link } from 'react-router-dom';
 
 function MenuCategory({ items, img, title }) {
-  console.log(title, ' I am from menu cate')
+  // console.log(title, ' I am from menu cate')
   return (
     <>
      {title &&  <SectionCover img={img}  title={title} />}

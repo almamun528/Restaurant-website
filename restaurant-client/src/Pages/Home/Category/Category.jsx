@@ -18,8 +18,6 @@ function Category() {
         subHeading={'Order Online'}
         />
 
-
-
         <Swiper
           slidesPerView={4}
           spaceBetween={30}
