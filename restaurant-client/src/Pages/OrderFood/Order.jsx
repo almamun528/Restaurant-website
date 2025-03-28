@@ -8,7 +8,7 @@ import OrderTab from "./OrderTab";
 import { useParams } from "react-router-dom";
 
 export default function Order() {
-  const categories = ["desserts", "soup", "salad", "pizza", "offered"];
+  const categories = [ "soup", "salad", "pizza", "offered"];
   const { category } = useParams(); // Get category from URL params
   const [menu] = UseMenu();
 
