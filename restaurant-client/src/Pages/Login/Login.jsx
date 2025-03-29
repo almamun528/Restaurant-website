@@ -70,7 +70,11 @@ const Login = () => {
                   name="captcha"
                   ref={captchaRef}
                 />
-                <button  type="button" className="btn btn-xs bg-amber-600 " onClick={handleValidateCaptcha}>
+                <button
+                  type="button"
+                  className="btn btn-xs bg-amber-600 "
+                  onClick={handleValidateCaptcha}
+                >
                   validate
                 </button>
                 <button
