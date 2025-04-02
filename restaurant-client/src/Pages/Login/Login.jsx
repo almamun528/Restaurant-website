@@ -6,6 +6,7 @@ import {
   validateCaptcha,
 } from "react-simple-captcha";
 import { AuthContext } from "../../Provider/AuthProvider";
+import { Link } from "react-router-dom";
 
 const Login = () => {
   const captchaRef = useRef();
@@ -95,6 +96,9 @@ const Login = () => {
                 </button>
               </fieldset>
             </div>
+          <p className="mt-2 mb-3 text-center">
+            <Link to='/register'>New here? <b>Register now!</b> </Link>
+          </p>
           </form>
         </div>
       </div>
