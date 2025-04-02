@@ -8,7 +8,7 @@ import AuthProvider from "./Provider/AuthProvider";
 createRoot(document.getElementById("root")).render(
   <section className="max-w-screen-xl mx-auto">
     <StrictMode>
-      <AuthProvider>
+      <AuthProvider >
         <RouterProvider router={router} />
       </AuthProvider>
     </StrictMode>
