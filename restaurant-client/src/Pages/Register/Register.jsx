@@ -1,10 +1,12 @@
 import { useContext } from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../Provider/AuthProvider";
+import Swal from "sweetalert2";
 
 function Register() {
-    const { createUser } = useContext(AuthContext);
+  const { createUser, updateUserProfile } = useContext(AuthContext);
+const navigate = useNavigate()
   const {
     register,
     handleSubmit,
@@ -12,12 +14,28 @@ function Register() {
   } = useForm();
 
   const onSubmit = (data) => {
-    createUser(data.email, data.password)
-    .then(result=>{
-        const loggedUser = result.user 
-        console.log(loggedUser,' user is login')
-    })
-  }
+    createUser(data.email, data.password).then((result) => {
+      const loggedUser = result.user;
+      console.log(loggedUser, " user is login");
+
+    //   bring the user update function from context 
+      updateUserProfile(data.name, data.photoURL)
+        .then(() => {
+          console.log("user profile info Updated");
+          Swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: "Your account is created",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+          navigate('/')
+        })
+        .catch((error) => console.log(error));
+    });
+
+  };
+
 
   return (
     <>
@@ -43,6 +61,16 @@ function Register() {
                 />
                 {errors.name && (
                   <span className="text-red-400">This field is required</span>
+                )}
+                <label className="fieldset-label">Photo URl</label>
+                <input
+                  type="text"
+                  {...register("photoURL", { required: true })}
+                  className="input"
+                  placeholder="Photo URL"
+                />
+                {errors.photoURL && (
+                  <span className="text-red-400">Image is required</span>
                 )}
 
                 <label className="fieldset-label">Email</label>

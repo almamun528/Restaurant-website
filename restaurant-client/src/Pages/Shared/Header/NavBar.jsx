@@ -5,7 +5,7 @@ import { AuthContext } from "../../../Provider/AuthProvider";
 import Swal from "sweetalert2";
 function NavBar() {
   const { user, logOut } = useContext(AuthContext);
-
+  //  const { displayName, email, photoURL } = user;
   const handleLogout = () => {
     logOut()
       .then(() => {
@@ -34,7 +34,6 @@ function NavBar() {
       <li>
         <Link to="/secret">Private route</Link>
       </li>
-     
     </>
   );
 
@@ -74,6 +73,16 @@ function NavBar() {
           <ul className="menu menu-horizontal px-1">{menuItems}</ul>
         </div>
         <div className="navbar-end">
+
+          {user && (
+            <div className="relative group">
+              <p className="mr-2 cursor-pointer">{user?.displayName}</p>
+              <p className="absolute left-0 top-full mt-1 w-max px-2 py-1 text-sm text-white bg-gray-800 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                {user?.email}
+              </p>
+            </div>
+          )}
+            {/* logOut button  */}
           {user ? (
             <button
               onClick={handleLogout}
