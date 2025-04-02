@@ -31,21 +31,10 @@ function NavBar() {
       <li>
         <Link to="/order/salad">Order</Link>
       </li>
-      {/* {user ? (
-        <>
-          <li>
-            <button onClick={handleLogout} className="btn btn-ghost -mt-1 border-amber-50" >
-              Log Out
-            </button>
-          </li>
-        </>
-      ) : (
-        <>
-          <li>
-            <Link to="/login">Login</Link>
-          </li>
-        </>
-      )} */}
+      <li>
+        <Link to="/secret">Private route</Link>
+      </li>
+     
     </>
   );
 

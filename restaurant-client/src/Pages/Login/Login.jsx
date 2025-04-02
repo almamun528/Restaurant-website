@@ -5,12 +5,15 @@ import {
   validateCaptcha,
 } from "react-simple-captcha";
 import { AuthContext } from "../../Provider/AuthProvider";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const Login = () => {
   const [disabled, setDisabled] = useState(true);
   const [captchaValue, setCaptchaValue] = useState("");
-
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location?.state?.from?.pathname || "/";
   // login / signIn function from context
   const { signIn } = useContext(AuthContext);
 
@@ -24,15 +27,20 @@ const Login = () => {
     const email = form.email.value;
     const password = form.password.value;
 
-    console.log("Form input ---> ", email, password);
-
     // Firebase authentication function
-    try {
-      const result = await signIn(email, password);
-      console.log("User logged in:", result.user);
-    } catch (error) {
-      console.error("Login failed:", error.message);
-    }
+    signIn(email, password).then((result) => {
+      const user = result.user;
+      if (user) {
+        Swal.fire({
+          position: "top-end",
+          icon: "success",
+          title: "Login Successful",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        navigate(from, { replace: true });
+      }
+    });
   };
 
   const handleValidateCaptcha = () => {
