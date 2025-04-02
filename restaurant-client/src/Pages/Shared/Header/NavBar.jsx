@@ -1,7 +1,25 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
-import logo from '/logo.png'
+import logo from "/logo.png";
+import { AuthContext } from "../../../Provider/AuthProvider";
+import Swal from "sweetalert2";
 function NavBar() {
+  const { user, logOut } = useContext(AuthContext);
+
+  const handleLogout = () => {
+    logOut()
+      .then(() => {
+        Swal.fire({
+          position: "top-end",
+          icon: "success",
+          title: "You are log out",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      })
+      .catch((error) => console.log(error)); // Fixed error handling
+  };
+
   const menuItems = (
     <>
       <li>
@@ -13,15 +31,27 @@ function NavBar() {
       <li>
         <Link to="/order/salad">Order</Link>
       </li>
-      <li>
-        <Link to="/login">Login</Link>
-      </li>
+      {/* {user ? (
+        <>
+          <li>
+            <button onClick={handleLogout} className="btn btn-ghost -mt-1 border-amber-50" >
+              Log Out
+            </button>
+          </li>
+        </>
+      ) : (
+        <>
+          <li>
+            <Link to="/login">Login</Link>
+          </li>
+        </>
+      )} */}
     </>
   );
 
   return (
     <>
-      <div className="navbar shadow-sm bg-black  fixed text-white  z-9 max-w-screen-xl">
+      <div className="navbar shadow-sm bg-black fixed text-white z-10 max-w-screen-xl">
         <div className="navbar-start">
           <div className="dropdown">
             <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
@@ -32,35 +62,39 @@ function NavBar() {
                 viewBox="0 0 24 24"
                 stroke="currentColor"
               >
-                {" "}
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth="2"
                   d="M4 6h16M4 12h8m-8 6h16"
-                />{" "}
+                />
               </svg>
             </div>
             <ul
               tabIndex={0}
-              className="menu menu-sm dropdown-content bg-base-100 text-black rounded-box z-1 mt-3 w-52 p-2 shadow"
+              className="menu menu-sm dropdown-content bg-base-100 text-black rounded-box z-10 mt-3 w-52 p-2 shadow"
             >
-              {/* Menu Items */}
               {menuItems}
             </ul>
           </div>
-          <Link to='/'>
-          <img className="w-[80px]" src={logo} alt="" />
+          <Link to="/">
+            <img className="w-[80px]" src={logo} alt="Logo" />
           </Link>
         </div>
         <div className="navbar-center hidden lg:flex">
-          <ul className="menu menu-horizontal px-1">
-            {/* menu items */}
-            {menuItems}
-          </ul>
+          <ul className="menu menu-horizontal px-1">{menuItems}</ul>
         </div>
         <div className="navbar-end">
-          <a className="btn">Button</a>
+          {user ? (
+            <button
+              onClick={handleLogout}
+              className="btn btn-ghost border-amber-50"
+            >
+              Log Out
+            </button>
+          ) : (
+            <Link to="/login">Login</Link>
+          )}
         </div>
       </div>
       <br />

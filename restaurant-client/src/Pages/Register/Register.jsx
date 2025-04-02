@@ -1,17 +1,23 @@
+import { useContext } from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../../Provider/AuthProvider";
 
 function Register() {
+    const { createUser } = useContext(AuthContext);
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => console.log(data);
-
-  //   console.log(watch("example")); // watch input value by passing the name of it
+  const onSubmit = (data) => {
+    createUser(data.email, data.password)
+    .then(result=>{
+        const loggedUser = result.user 
+        console.log(loggedUser,' user is login')
+    })
+  }
 
   return (
     <>
@@ -31,7 +37,6 @@ function Register() {
                 <label className="fieldset-label">Full Name</label>
                 <input
                   type="text"
-                  name="name"
                   {...register("name", { required: true })}
                   className="input"
                   placeholder="Type Your Name"
@@ -43,24 +48,38 @@ function Register() {
                 <label className="fieldset-label">Email</label>
                 <input
                   type="email"
-                  name="email"
-                  {...register("email", { required: true })}
+                  {...register("email", {
+                    required: "Email is required",
+                    pattern: /^\S+@\S+\.\S+$/,
+                  })}
                   className="input"
                   placeholder="Email"
                 />
                 {errors.email && (
-                  <span className="text-red-500">Write Valid email</span>
+                  <span className="text-red-500">Enter a valid email</span>
                 )}
+
                 <label className="fieldset-label">Password</label>
                 <input
                   type="password"
                   className="input"
-                  {...register("password", { required: true })}
+                  {...register("password", {
+                    required: "Password is required",
+                    minLength: {
+                      value: 6,
+                      message: "Password must be at least 6 characters",
+                    },
+                    maxLength: {
+                      value: 15,
+                      message: "Password must be under 15 characters",
+                    },
+                  })}
                   placeholder="Password"
-                  name="password"
                 />
                 {errors.password && (
-                  <span className="text-red-500">This field is required</span>
+                  <span className="text-red-500">
+                    {errors.password.message}
+                  </span>
                 )}
                 <button type="submit" className="btn btn-neutral mt-4">
                   Register
@@ -68,7 +87,7 @@ function Register() {
               </fieldset>
               <p className="mt-2 mb-3 text-center">
                 <Link to="/login">
-                  Already have an account ? <b> Login now!</b>{" "}
+                  Already have an account? <b>Login now!</b>
                 </Link>
               </p>
             </form>

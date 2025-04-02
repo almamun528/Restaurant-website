@@ -9,40 +9,45 @@ import {
 import { app } from "../Firebase/firebase.config";
 
 const auth = getAuth(app);
-
 const AuthContext = createContext(null);
 
 const AuthProvider = ({ children }) => {
-  // Accept children as a prop
-  const [user, setUser] = useState(null); // Explicitly set null for clarity
+  const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  // !create an user
+
+  // Create a user
   const createUser = (email, password) => {
     setLoading(true);
-    return createUserWithEmailAndPassword(auth, email, password);
-  };
-  // user login with email and password
-  const signIn = (email, password) => {
-    setLoading(true);
-    return signInWithEmailAndPassword(email, password);
+    return createUserWithEmailAndPassword(auth, email, password).finally(() =>
+      setLoading(false)
+    );
   };
 
-  //observation of user
+  // User login
+  const signIn = (email, password) => {
+    setLoading(true);
+    return signInWithEmailAndPassword(auth, email, password).finally(() =>
+      setLoading(false)
+    );
+  };
+
+  // Observe user state
   useEffect(() => {
     const unSubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
-      console.log("current user ---> ", currentUser);
       setLoading(false);
     });
 
-    return () => unSubscribe(); // Ensure cleanup function is correctly returned
+    return () => unSubscribe();
   }, []);
-  //   logOut for user
+
+  // User logout
   const logOut = () => {
     setLoading(true);
-    return signOut(auth);
+    return signOut(auth).finally(() => setLoading(false));
   };
-  //! Provide value
+
+  // Provide authentication context
   const authInfo = {
     user,
     loading,
@@ -57,4 +62,4 @@ const AuthProvider = ({ children }) => {
 };
 
 export default AuthProvider;
-export { AuthContext }; // Exporting AuthContext for use in other components
+export { AuthContext };
