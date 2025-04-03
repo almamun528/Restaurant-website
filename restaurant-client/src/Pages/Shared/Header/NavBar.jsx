@@ -4,10 +4,14 @@ import logo from "/logo.png";
 import { AuthContext } from "../../../Provider/AuthProvider";
 import Swal from "sweetalert2";
 import { FaShoppingCart } from "react-icons/fa";
+import useCart from "../../../Hooks/useCart";
 
 function NavBar() {
   const { user, logOut } = useContext(AuthContext);
-  //  const { displayName, email, photoURL } = user;
+const [cart] = useCart()
+
+
+  
   const handleLogout = () => {
     logOut()
       .then(() => {
@@ -40,7 +44,9 @@ function NavBar() {
         <Link to="/">
           <button className="btn -mt-2">
             <FaShoppingCart />{" "}
-            <div className="badge badge-sm badge-secondary">+0</div>
+            <div className="badge badge-sm badge-secondary">
+             + {cart?.length}
+            </div>
           </button>
         </Link>
       </li>
@@ -83,14 +89,7 @@ function NavBar() {
           <ul className="menu menu-horizontal px-1">{menuItems}</ul>
         </div>
         <div className="navbar-end">
-          {user && (
-            <div className="relative group">
-              <p className="mr-2 cursor-pointer">{user?.displayName}</p>
-              <p className="absolute left-0 top-full mt-1 w-max px-2 py-1 text-sm text-white bg-gray-800 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                {user?.email}
-              </p>
-            </div>
-          )}
+    {user && <p className="mr-2">{user?.email}</p>}
           {/* logOut button  */}
           {user ? (
             <button
