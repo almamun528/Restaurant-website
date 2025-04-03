@@ -28,7 +28,14 @@ async function run() {
     const menuCollection = client.db("restruentDB").collection("menu");
     const reviewCollection = client.db("restruentDB").collection("reviews");
     const cartCollection = client.db("restruentDB").collection("carts");
+    const userCollection = client.db("restruentDB").collection("users");
 
+    // !-------------------user related apis------------------
+    app.get("/users", async (req, res) => {
+      const user = req.body;
+      const result = await userCollection.insertOne(user);
+      res.send(result);
+    });
     //!----------- get all menu -------------
     app.get("/menu", async (req, res) => {
       const result = await menuCollection.find().toArray();
