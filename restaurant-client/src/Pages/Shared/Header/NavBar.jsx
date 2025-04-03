@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import logo from "/logo.png";
 import { AuthContext } from "../../../Provider/AuthProvider";
 import Swal from "sweetalert2";
+import { FaShoppingCart } from "react-icons/fa";
+
 function NavBar() {
   const { user, logOut } = useContext(AuthContext);
   //  const { displayName, email, photoURL } = user;
@@ -33,6 +35,14 @@ function NavBar() {
       </li>
       <li>
         <Link to="/secret">Private route</Link>
+      </li>
+      <li>
+        <Link to="/">
+          <button className="btn -mt-2">
+            <FaShoppingCart />{" "}
+            <div className="badge badge-sm badge-secondary">+0</div>
+          </button>
+        </Link>
       </li>
     </>
   );
@@ -73,7 +83,6 @@ function NavBar() {
           <ul className="menu menu-horizontal px-1">{menuItems}</ul>
         </div>
         <div className="navbar-end">
-
           {user && (
             <div className="relative group">
               <p className="mr-2 cursor-pointer">{user?.displayName}</p>
@@ -82,7 +91,7 @@ function NavBar() {
               </p>
             </div>
           )}
-            {/* logOut button  */}
+          {/* logOut button  */}
           {user ? (
             <button
               onClick={handleLogout}

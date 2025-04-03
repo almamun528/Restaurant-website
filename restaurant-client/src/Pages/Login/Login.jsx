@@ -13,6 +13,7 @@ const Login = () => {
   const [captchaValue, setCaptchaValue] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
+  
   const from = location?.state?.from?.pathname || "/";
   // login / signIn function from context
   const { signIn } = useContext(AuthContext);

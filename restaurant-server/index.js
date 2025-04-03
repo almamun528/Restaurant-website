@@ -9,9 +9,7 @@ app.use(cors());
 app.use(express.json());
 const port = process.env.PORT || 3001;
 
-
-const uri =
-  `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.34ihq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.34ihq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
@@ -27,15 +25,28 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
 
-
     const menuCollection = client.db("restruentDB").collection("menu");
     const reviewCollection = client.db("restruentDB").collection("reviews");
+    const cartCollection = client.db("restruentDB").collection("carts");
 
-    // get all menu 
-    app.get('/menu', async(req, res)=>{
-      const result = await menuCollection.find().toArray()
-      res.send(result)
-    })
+    //!----------- get all menu -------------
+    app.get("/menu", async (req, res) => {
+      const result = await menuCollection.find().toArray();
+      res.send(result);
+    });
+
+    //!----------- get all reviews -------------
+    app.get("/reviews", async (req, res) => {
+      const result = await reviewCollection.find().toArray();
+      res.send(result);
+    });
+    //!-----------  cart collection -------------
+    app.post("/carts", async (req, res) => {
+      const cartItem = req.body;
+      const result = await cartCollection.insertOne(cartItem);
+      res.send(result);
+    });
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(
@@ -53,11 +64,11 @@ app.get("/", (req, res) => {
   res.send("App is running successfully!");
 });
 
-// !
+// !----------------------- Naming convention  -------------------------------
 
 // Start the Server
 app.listen(port, () => {
   console.log(`🚀 Server is running at http://localhost:${port}`);
 });
-console.log('user name ',process.env.DB_USER)
-console.log('user password ',process.env.DB_PASSWORD)
+console.log("user name ", process.env.DB_USER);
+console.log("user password ", process.env.DB_PASSWORD);
