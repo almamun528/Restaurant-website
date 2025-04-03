@@ -8,10 +8,8 @@ import useCart from "../../../Hooks/useCart";
 
 function NavBar() {
   const { user, logOut } = useContext(AuthContext);
-const [cart] = useCart()
+  const [cart] = useCart();
 
-
-  
   const handleLogout = () => {
     logOut()
       .then(() => {
@@ -41,11 +39,11 @@ const [cart] = useCart()
         <Link to="/secret">Private route</Link>
       </li>
       <li>
-        <Link to="/">
+        <Link to="/dashboard/cart">
           <button className="btn -mt-2">
             <FaShoppingCart />{" "}
             <div className="badge badge-sm badge-secondary">
-             + {cart?.length}
+              + {cart?.length}
             </div>
           </button>
         </Link>
@@ -89,7 +87,7 @@ const [cart] = useCart()
           <ul className="menu menu-horizontal px-1">{menuItems}</ul>
         </div>
         <div className="navbar-end">
-    {user && <p className="mr-2">{user?.email}</p>}
+          {user && <p className="mr-2">{user?.email}</p>}
           {/* logOut button  */}
           {user ? (
             <button
