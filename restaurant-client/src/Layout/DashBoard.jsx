@@ -8,8 +8,11 @@ import {
   FaShoppingCart,
 } from "react-icons/fa";
 import { NavLink, Outlet } from "react-router-dom";
+import useCart from "../Hooks/useCart";
 
 const DashBoard = () => {
+  const [cart] = useCart();
+
   return (
     <>
       <section className="flex gap-3">
@@ -18,7 +21,7 @@ const DashBoard = () => {
           <ul className="menu p-4">
             <li>
               <NavLink to="/dashboard/cart">
-                <FaShoppingCart /> My Cart
+                <FaShoppingCart /> My Cart ({cart?.length})
               </NavLink>{" "}
             </li>
             <li>
@@ -51,7 +54,7 @@ const DashBoard = () => {
             </li>
             <li>
               <NavLink to="/order/salad">
-                <FaSearch /> Menu 
+                <FaSearch /> Menu
               </NavLink>{" "}
             </li>
           </ul>

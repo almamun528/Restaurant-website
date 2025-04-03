@@ -5,13 +5,12 @@ import Swal from "sweetalert2";
 import useAxiosSecure, { axiosSecure } from "../../../Hooks/useAxiosSecure";
 
 const Cart = () => {
-  const [cart, refetch] = useCart();
+  const [cart, refetch] = useCart(); //Product items
   const totalPrice = cart.reduce((total, item) => total + item.price, 0);
   const axiosSecure = useAxiosSecure();
 
+//   delete function 
   const handleDelete = (id) => {
-    console.log("this id needs to delete ", id);
-
     Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
