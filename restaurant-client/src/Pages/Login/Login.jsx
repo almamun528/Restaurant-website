@@ -7,13 +7,14 @@ import {
 import { AuthContext } from "../../Provider/AuthProvider";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import SocialLogin from "../../Components/SocialLogin";
 
 const Login = () => {
   const [disabled, setDisabled] = useState(true);
   const [captchaValue, setCaptchaValue] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
-  
+
   const from = location?.state?.from?.pathname || "/";
   // login / signIn function from context
   const { signIn } = useContext(AuthContext);
@@ -118,6 +119,10 @@ const Login = () => {
                 New here? <b>Register now!</b>
               </Link>
             </p>
+            <span className="mx-auto my-2">
+              {" "}
+              <SocialLogin />
+            </span>
           </form>
         </div>
       </div>
