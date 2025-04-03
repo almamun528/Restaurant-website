@@ -1,19 +1,35 @@
 import React from "react";
 import useAuth from "../Hooks/useAuth";
+import useAxiosPublic from "../Hooks/useAxiosPublic";
+import { useNavigate } from "react-router-dom";
 
 const SocialLogin = () => {
-  const { googleSignIn } = useAuth();
+  const { googleSignIn } = useAuth(); //google function from context
+  const axiosPublic = useAxiosPublic(); 
+  const navigate = useNavigate();
 
+  // google Login function
   const handleGoogleSignIn = () => {
+    // login Function
     googleSignIn().then((result) => {
-      console.log(result.user);
+      //   save the data to userCollection
+      const userInfo = {
+        //create user info
+        email: result.user?.email,
+        name: result.user?.displayName,
+      };
+      // send the data to backend into UserCollection
+      axiosPublic.post("/users", userInfo).then((res) => {
+        console.log(res.data);
+        navigate("/"); // navigate user to home page after login
+      });
     });
   };
   return (
     <>
       <div>
         <button
-          onClick={handleGoogleSignIn}
+          onClick={handleGoogleSignIn} 
           className="btn bg-white text-black border-[#e5e5e5]"
         >
           <svg

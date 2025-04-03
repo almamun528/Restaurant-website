@@ -31,15 +31,28 @@ async function run() {
     const userCollection = client.db("restruentDB").collection("users");
 
     // !-------------------user related apis------------------
-  app.post("/users", async (req, res) => {
-    const user = req.body;
-    try {
-      const result = await userCollection.insertOne(user);
-      res.status(201).send(result); // 201 for successful creation
-    } catch (error) {
-      res.status(500).send({ message: "Failed to insert user", error });
-    }
-  });
+    app.post("/users", async (req, res) => {
+      const user = req.body;
+      // query {search the email } if the email is already exist or not
+      const query = { email: user.email }; //search by user email
+      const existingUser = await userCollection.findOne(query);
+      if (existingUser) {
+        //if user is exist , we will not save the data again,
+        return res.send({
+          message: "user is already exist in database ",
+          insertedId: null,
+        });
+      }
+
+      try {
+        // save the data if user is not exist into database.
+        const result = await userCollection.insertOne(user);
+
+        res.status(201).send(result); // 201 for successful creation
+      } catch (error) {
+        res.status(500).send({ message: "Failed to insert user", error });
+      }
+    });
     //!----------- get all menu -------------
     app.get("/menu", async (req, res) => {
       const result = await menuCollection.find().toArray();
