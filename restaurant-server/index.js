@@ -5,7 +5,15 @@ const app = express();
 const cors = require("cors");
 require("dotenv").config();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:5173", // Change "*" to the frontend origin
+    credentials: true, // Allow cookies/auth headers
+    methods: "GET,POST,PUT,DELETE,PATCH,OPTIONS",
+    allowedHeaders: "Content-Type,Authorization",
+  })
+);
+
 app.use(express.json());
 const port = process.env.PORT || 3001;
 
@@ -31,6 +39,7 @@ async function run() {
     const userCollection = client.db("restruentDB").collection("users");
 
     // !-------------------user related apis------------------
+
     app.post("/users", async (req, res) => {
       const user = req.body;
       // query {search the email } if the email is already exist or not
@@ -53,6 +62,31 @@ async function run() {
         res.status(500).send({ message: "Failed to insert user", error });
       }
     });
+
+    // !get all users
+    app.get("/users", async (req, res) => {
+      const result = await userCollection.find().toArray();
+      res.send(result);
+    });
+    // ! delete a single User
+    app.delete("/users/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await userCollection.deleteOne(query);
+      res.send(result);
+    });
+ app.patch("/users/admin/:id", async (req, res) => {
+   const id = req.params.id;
+   const filter = { _id: new ObjectId(id) };
+   const updatedDoc = {
+     $set: {
+       role: "admin",
+     },
+   };
+   const result = await userCollection.updateOne(filter, updatedDoc);
+   res.send(result);
+ });
+
     //!----------- get all menu -------------
     app.get("/menu", async (req, res) => {
       const result = await menuCollection.find().toArray();
