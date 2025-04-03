@@ -33,16 +33,22 @@ const AuthProvider = ({ children }) => {
       setLoading(false)
     );
   };
-  // login / sign In with google 
-  const googleSignIn=()=>{
-    setLoading(true)
-    return signInWithPopup(auth , googleProvider)
-  }
+  // login / sign In with google
+  const googleSignIn = () => {
+    setLoading(true);
+    return signInWithPopup(auth, googleProvider);
+  };
 
   // Observe user state
   useEffect(() => {
     const unSubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
+      if (currentUser) {
+        // get the token and store client HTTP only
+      } else {
+        // TODO : remove token (if token store into the client side )
+        
+      }
       setLoading(false);
     });
 
