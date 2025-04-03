@@ -31,11 +31,15 @@ async function run() {
     const userCollection = client.db("restruentDB").collection("users");
 
     // !-------------------user related apis------------------
-    app.get("/users", async (req, res) => {
-      const user = req.body;
+  app.post("/users", async (req, res) => {
+    const user = req.body;
+    try {
       const result = await userCollection.insertOne(user);
-      res.send(result);
-    });
+      res.status(201).send(result); // 201 for successful creation
+    } catch (error) {
+      res.status(500).send({ message: "Failed to insert user", error });
+    }
+  });
     //!----------- get all menu -------------
     app.get("/menu", async (req, res) => {
       const result = await menuCollection.find().toArray();
