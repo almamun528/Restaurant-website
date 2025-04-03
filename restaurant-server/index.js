@@ -4,6 +4,7 @@ const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const app = express();
 const cors = require("cors");
 require("dotenv").config();
+const jsw = require("jsonwebtoken");
 
 app.use(
   cors({
@@ -75,17 +76,17 @@ async function run() {
       const result = await userCollection.deleteOne(query);
       res.send(result);
     });
- app.patch("/users/admin/:id", async (req, res) => {
-   const id = req.params.id;
-   const filter = { _id: new ObjectId(id) };
-   const updatedDoc = {
-     $set: {
-       role: "admin",
-     },
-   };
-   const result = await userCollection.updateOne(filter, updatedDoc);
-   res.send(result);
- });
+    app.patch("/users/admin/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const updatedDoc = {
+        $set: {
+          role: "admin",
+        },
+      };
+      const result = await userCollection.updateOne(filter, updatedDoc);
+      res.send(result);
+    });
 
     //!----------- get all menu -------------
     app.get("/menu", async (req, res) => {
