@@ -56,7 +56,7 @@ async function run() {
         next();
       });
     };
-
+    // !------------JWT Request--------------------
     app.post("/jwt", async (req, res) => {
       const user = req.body;
       const token = jwt.sign(user, process.env.Access_Token, {
@@ -114,6 +114,21 @@ async function run() {
       };
       const result = await userCollection.updateOne(filter, updatedDoc);
       res.send(result);
+    });
+    // ! ______________Admin APi_________________
+
+    app.get("/user/admin/:email", verifyToken, async (req, res) => {
+      const email = req.params.email;
+      if (email == !req.decoded.email) {
+        return res.status(403).send({ message: "unauthorized access" });
+      }
+      const query = { email: email };
+      const user = await userCollection.findOne(query);
+      let admin = false;
+      if (user) {
+        admin = user?.role === "admin";
+      }
+      res.send({ admin });
     });
 
     //!----------- get all menu -------------
