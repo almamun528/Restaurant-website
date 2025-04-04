@@ -5,20 +5,9 @@ const app = express();
 const cors = require("cors");
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
-
-app.use(
-  cors({
-    origin: "http://localhost:5173", // Change "*" to the frontend origin
-    credentials: true, // Allow cookies/auth headers
-    methods: "GET,POST,PUT,DELETE,PATCH,OPTIONS",
-    allowedHeaders: "Content-Type,Authorization",
-  })
-);
-
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.34ihq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 app.use(express.json());
 const port = process.env.PORT || 3001;
-
-const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.34ihq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
@@ -28,6 +17,15 @@ const client = new MongoClient(uri, {
     deprecationErrors: true,
   },
 });
+
+app.use(
+  cors({
+    origin: "http://localhost:5173", // Change "*" to the frontend origin
+    credentials: true, // Allow cookies/auth headers
+    methods: "GET,POST,PUT,DELETE,PATCH,OPTIONS",
+    allowedHeaders: "Content-Type,Authorization",
+  })
+);
 
 async function run() {
   try {
@@ -40,11 +38,29 @@ async function run() {
     const userCollection = client.db("restruentDB").collection("users");
 
     // ?______________JWT related APIs______________
+    // middle wear JWT
+    const verifyToken = (req, res, next) => {
+      console.log("inside verify token", req.headers.authorization);
+
+      if (!req.headers.authorization) {
+        return res.status(401).send({ message: "forbidden access" });
+      }
+
+      const token = req.headers.authorization.split(" ")[1];
+
+      jwt.verify(token, process.env.Access_Token, (error, decoded) => {
+        if (error) {
+          return res.status(401).send({ message: "forbidden access" });
+        }
+        req.decoded = decoded;
+        next();
+      });
+    };
 
     app.post("/jwt", async (req, res) => {
       const user = req.body;
       const token = jwt.sign(user, process.env.Access_Token, {
-        expiresIn: "1h"
+        expiresIn: "1h",
       });
       res.send({ token });
     });
@@ -76,6 +92,7 @@ async function run() {
 
     // !get all users
     app.get("/users", async (req, res) => {
+      console.log("request from header ----> ", req.headers);
       const result = await userCollection.find().toArray();
       res.send(result);
     });
@@ -86,6 +103,7 @@ async function run() {
       const result = await userCollection.deleteOne(query);
       res.send(result);
     });
+    // ! make a user to admin
     app.patch("/users/admin/:id", async (req, res) => {
       const id = req.params.id;
       const filter = { _id: new ObjectId(id) };
@@ -152,5 +170,3 @@ app.get("/", (req, res) => {
 app.listen(port, () => {
   console.log(`🚀 Server is running at http://localhost:${port}`);
 });
-console.log("user name ", process.env.DB_USER);
-console.log("user password ", process.env.DB_PASSWORD);
