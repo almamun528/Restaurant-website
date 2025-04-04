@@ -4,7 +4,7 @@ const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const app = express();
 const cors = require("cors");
 require("dotenv").config();
-const jsw = require("jsonwebtoken");
+const jwt = require("jsonwebtoken");
 
 app.use(
   cors({
@@ -38,6 +38,16 @@ async function run() {
     const reviewCollection = client.db("restruentDB").collection("reviews");
     const cartCollection = client.db("restruentDB").collection("carts");
     const userCollection = client.db("restruentDB").collection("users");
+
+    // ?______________JWT related APIs______________
+
+    app.post("/jwt", async (req, res) => {
+      const user = req.body;
+      const token = jwt.sign(user, process.env.Access_Token, {
+        expiresIn: "1h"
+      });
+      res.send({ token });
+    });
 
     // !-------------------user related apis------------------
 
