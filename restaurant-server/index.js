@@ -56,6 +56,18 @@ async function run() {
         next();
       });
     };
+    // ! check user is Admin or not
+    const verifyAdmin = async (req, res, next) => {
+      const email = req.decoded.email;
+      const query = { email: email };
+      const user = await userCollection.findOne(query);
+      const isAdmin = user?.role === "admin";
+      if (!isAdmin) {
+        return res.status(403).send({ message: "forbidden access" });
+      }
+      next();
+    };
+
     // !------------JWT Request--------------------
     app.post("/jwt", async (req, res) => {
       const user = req.body;
@@ -67,7 +79,7 @@ async function run() {
 
     // !-------------------user related apis------------------
 
-    app.post("/users", async (req, res) => {
+    app.post("/users", verifyAdmin,verifyToken, async (req, res) => {
       const user = req.body;
       // query {search the email } if the email is already exist or not
       const query = { email: user.email }; //search by user email
@@ -91,7 +103,7 @@ async function run() {
     });
 
     // !get all users
-    app.get("/users", async (req, res) => {
+    app.get("/users", verifyToken,verifyAdmin,async (req, res) => {
       console.log("request from header ----> ", req.headers);
       const result = await userCollection.find().toArray();
       res.send(result);
