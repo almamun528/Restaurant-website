@@ -10,6 +10,19 @@ const useAxiosSecure = () => {
     config.headers.authorization = `Bearer ${token}`;
     return config;
   });
+
+  // intercepts 401 and 403 status
+  axiosSecure.interceptors.response.use(
+    function (response) {
+      return response;
+    },
+    function (error) {
+      const status = error?.response?.status;
+      console.log("error from axios secure Interceptors", status);
+      return Promise.reject(error);
+    }
+  );
+
   return axiosSecure;
 };
 
