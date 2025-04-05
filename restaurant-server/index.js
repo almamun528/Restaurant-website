@@ -40,8 +40,6 @@ async function run() {
     // ?______________JWT related APIs______________
     // middle wear JWT
     const verifyToken = (req, res, next) => {
-      console.log("inside verify token", req.headers.authorization);
-
       if (!req.headers.authorization) {
         return res.status(401).send({ message: "forbidden access" });
       }
@@ -79,7 +77,7 @@ async function run() {
 
     // !-------------------user related apis------------------
 
-    app.post("/users", verifyAdmin,verifyToken, async (req, res) => {
+    app.post("/users", verifyToken, verifyAdmin, async (req, res) => {
       const user = req.body;
       // query {search the email } if the email is already exist or not
       const query = { email: user.email }; //search by user email
@@ -103,8 +101,7 @@ async function run() {
     });
 
     // !get all users
-    app.get("/users", verifyToken,verifyAdmin,async (req, res) => {
-      console.log("request from header ----> ", req.headers);
+    app.get("/users", verifyToken,verifyAdmin, async (req, res) => {
       const result = await userCollection.find().toArray();
       res.send(result);
     });
