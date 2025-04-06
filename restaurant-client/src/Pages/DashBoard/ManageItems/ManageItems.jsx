@@ -3,12 +3,13 @@ import SectionTitle from "../../../Components/SectionTitle";
 import UseMenu from "../../../Hooks/UseMenu";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import Swal from "sweetalert2";
+import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 
 const ManageItems = () => {
-  const [menu] = UseMenu();
+  const [menu, loading, refetch] = UseMenu();
+  const axiosSecure = useAxiosSecure();
 
   const handleDeleteItem = (item) => {
-
     console.log(item._id, " needs to delete ");
 
     Swal.fire({
@@ -19,17 +20,23 @@ const ManageItems = () => {
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
+    }).then(async (result) => {
       if (result.isConfirmed) {
-        // Swal.fire({
-        //   title: "Deleted!",
-        //   text: "Your file has been deleted.",
-        //   icon: "success",
-        // });
+        const res = await axiosSecure.delete(`/menu/${item._id}`);
+        console.log(res.data);
+        if (res.data.deletedCount > 0) {
+          refetch();
+          Swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: `${item?.name} is deleted`,
+            showConfirmButton: false,
+            timer: 1500,
+          });
+        }
       }
     });
   };
-
 
   //   for update
   const handleUpdateItem = (item) => {
