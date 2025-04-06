@@ -1,12 +1,35 @@
 import React from "react";
 import SectionTitle from "../../../Components/SectionTitle";
 import { useForm } from "react-hook-form";
+import useAxiosPublic from "../../../Hooks/useAxiosPublic";
+import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 
 const AddItems = () => {
   const { register, handleSubmit } = useForm();
+  const axiosSecure = useAxiosSecure();
+  const axiosPublic = useAxiosPublic();
+  // image BB APi keys
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const imageHosting_key = import.meta.env.VITE_IMAGE_HOSTING_KRY;
+  const image_hosting_Api = `https://api.imgbb.com/1/upload?key=${imageHosting_key}`;
+  const onSubmit = async (data) => {
+    const imageFile = { image: data.image[0] };
+    // image upload to Image BB and get url
+    const res = await axiosPublic.post(image_hosting_Api, imageFile, {
+      headers: { "content-type": "multipart/form-data" },
+    });
+    if (res.data.success) {
+      // now send the menu data to the server with image link
+      const menuItem = {
+        name: data.name,
+        category: data.category,
+        price: parseFloat(data.price),
+        image: res.data.data.display_url,
+      };
+      //send the data to backend
+      const menuRes = await axiosSecure.post("/menu", menuItem);
+      console.log("menu item----> ", menuRes.data);
+    }
   };
 
   return (
