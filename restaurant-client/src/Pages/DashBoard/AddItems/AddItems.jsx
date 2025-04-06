@@ -3,7 +3,7 @@ import SectionTitle from "../../../Components/SectionTitle";
 import { useForm } from "react-hook-form";
 import useAxiosPublic from "../../../Hooks/useAxiosPublic";
 import useAxiosSecure from "../../../Hooks/useAxiosSecure";
-
+import Swal from "sweetalert2";
 const AddItems = () => {
   const { register, handleSubmit } = useForm();
   const axiosSecure = useAxiosSecure();
@@ -28,7 +28,15 @@ const AddItems = () => {
       };
       //send the data to backend
       const menuRes = await axiosSecure.post("/menu", menuItem);
-      console.log("menu item----> ", menuRes.data);
+      if (menuRes.data.insertedId) {
+        Swal.fire({
+          position: "top-end",
+          icon: "success",
+          title: `${data.name} is added into the list`,
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      }
     }
   };
 

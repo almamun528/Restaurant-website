@@ -101,7 +101,7 @@ async function run() {
     });
 
     // !get all users
-    app.get("/users", verifyToken,verifyAdmin, async (req, res) => {
+    app.get("/users", verifyToken, verifyAdmin, async (req, res) => {
       const result = await userCollection.find().toArray();
       res.send(result);
     });
@@ -143,6 +143,12 @@ async function run() {
     //!----------- get all menu -------------
     app.get("/menu", async (req, res) => {
       const result = await menuCollection.find().toArray();
+      res.send(result);
+    });
+    // !____________ Post a menu____________
+    app.post("/menu", async (req, res) => {
+      const item = req.body;
+      const result = await menuCollection.insertOne(item);
       res.send(result);
     });
 
