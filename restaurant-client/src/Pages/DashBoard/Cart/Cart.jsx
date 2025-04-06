@@ -3,13 +3,14 @@ import useCart from "../../../Hooks/useCart";
 import { FaTrash } from "react-icons/fa";
 import Swal from "sweetalert2";
 import useAxiosSecure, { axiosSecure } from "../../../Hooks/useAxiosSecure";
+import { Link } from "react-router-dom";
 
 const Cart = () => {
   const [cart, refetch] = useCart(); //Product items
   const totalPrice = cart.reduce((total, item) => total + item.price, 0);
   const axiosSecure = useAxiosSecure();
 
-//   delete function 
+  //   delete function
   const handleDelete = (id) => {
     Swal.fire({
       title: "Are you sure?",
@@ -43,7 +44,21 @@ const Cart = () => {
         <div className="flex justify-evenly">
           <h2 className="text-4xl">Items : {cart?.length} </h2>
           <h2 className="text-4xl">Total Price : {totalPrice} </h2>
-          <button className="btn bg-amber-500 hover:bg-amber-300">Pay</button>
+          {cart?.length ? (
+            <Link
+              className="btn bg-amber-500 hover:bg-amber-300"
+              to="/dashboard/payment"
+            >
+              Pay
+            </Link>
+          ) : (
+            <button
+              disabled
+              className="btn text-amber-400 border-2 border-amber-500"
+            >
+              Pay
+            </button>
+          )}
         </div>
 
         {/* table start */}

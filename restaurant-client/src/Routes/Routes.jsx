@@ -14,6 +14,7 @@ import AddItems from "../Pages/DashBoard/AddItems/AddItems";
 import AdminRoute from "./AdminRoute";
 import ManageItems from "../Pages/DashBoard/ManageItems/ManageItems";
 import UpdateItem from "../Pages/DashBoard/UpdateItem/UpdateItem";
+import Payment from "../Pages/DashBoard/Payment/Payment";
 
 export const router = createBrowserRouter([
   {
@@ -45,6 +46,10 @@ export const router = createBrowserRouter([
     children: [
       // normal user routes
       { path: "cart", element: <Cart /> },
+      {
+        path: "payment",
+        element: <Payment />,
+      },
       // admin only route
       {
         path: "users",
@@ -55,6 +60,7 @@ export const router = createBrowserRouter([
           </AdminRoute>
         ),
       },
+
       {
         path: "manageItems",
         element: (
