@@ -4,7 +4,7 @@ const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const app = express();
 const cors = require("cors");
 require("dotenv").config();
-const strip = require("stripe")(process.env.Strip_Secret_key);
+const stripe = require("stripe")(process.env.Strip_Secret_key);
 const jwt = require("jsonwebtoken");
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.34ihq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 app.use(express.json());
@@ -196,18 +196,45 @@ async function run() {
     // !?------------------------------------------------------
     // -------------------Payment related Apis------------
     // !?------------------------------------------------------
+    // app.post("/create-payment-intent", async (req, res) => {
+    //   const { price } = req.body;
+    //   const amount = parseInt(price * 100); // convert dollars to cents
+    //   const paymentIntent = await stripe.paymentIntents.create({
+    //     amount: amount,
+    //     currency: "usd",
+    //     payment_method_types: ["card"], // ✅ fixed key name
+    //   });
+    //   // https://docs.stripe.com/payments/quickstart
+    //   // doc to apply the same methods
+    //   res.send({
+    //     clientSecret: paymentIntent.client_secret,
+    //   });
+    // });
     app.post("/create-payment-intent", async (req, res) => {
-      const { price } = req.body;
-      const amount = parseInt(price * 100);
-      const paymentIntent = await strip.paymentIntents.create({
-        amount: amount,
-        currency: "usd",
-        payment_methods_types: ["card"],
-      });
-      res.send({
-        clientSecret: paymentIntent.client_secret,
-      });
+      try {
+        const { price } = req.body;
+        const amount = parseInt(price * 100);
+
+        if (!amount || amount < 50) {
+          // Stripe requires minimum 50 cents
+          return res.status(400).send({ error: "Invalid amount" });
+        }
+
+        const paymentIntent = await stripe.paymentIntents.create({
+          amount: amount,
+          currency: "usd",
+          payment_method_types: ["card"],
+        });
+
+        res.send({
+          clientSecret: paymentIntent.client_secret,
+        });
+      } catch (error) {
+        console.error("Payment error:", error);
+        res.status(500).send({ error: error.message });
+      }
     });
+
     // !?------------------------------------------------------
     // !?------------------------------------------------------
     // Send a ping to confirm a successful connection
