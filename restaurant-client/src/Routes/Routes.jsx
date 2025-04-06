@@ -64,10 +64,14 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path:'updateItem/:id',
-        element: <AdminRoute>
-          <UpdateItem/>
-        </AdminRoute>
+        path: "updateItem/:id",
+        element: (
+          <AdminRoute>
+            <UpdateItem />
+          </AdminRoute>
+        ),
+        loader: ({ params }) =>
+          fetch(`http://localhost:3001/menu/${params.id}`),
       },
       {
         path: "addItems",
