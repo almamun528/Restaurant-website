@@ -23,6 +23,7 @@ const AddItems = () => {
       const menuItem = {
         name: data.name,
         category: data.category,
+        recipe: data.recipe,
         price: parseFloat(data.price),
         image: res.data.data.display_url,
       };
