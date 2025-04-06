@@ -158,6 +158,14 @@ async function run() {
       const result = await menuCollection.deleteOne(query);
       res.send(result);
     });
+    //! ----------get  a single menu item---------
+    app.get("/menu/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await menuCollection.findOne(query);
+      res.send(result);
+    });
+
     //!----------- get all reviews -------------
     app.get("/reviews", async (req, res) => {
       const result = await reviewCollection.find().toArray();

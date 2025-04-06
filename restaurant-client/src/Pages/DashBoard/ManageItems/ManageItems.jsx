@@ -4,14 +4,13 @@ import UseMenu from "../../../Hooks/UseMenu";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import Swal from "sweetalert2";
 import useAxiosSecure from "../../../Hooks/useAxiosSecure";
+import { Link } from "react-router-dom";
 
 const ManageItems = () => {
   const [menu, loading, refetch] = UseMenu();
   const axiosSecure = useAxiosSecure();
 
   const handleDeleteItem = (item) => {
-    console.log(item._id, " needs to delete ");
-
     Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -79,12 +78,9 @@ const ManageItems = () => {
                   <td>{item?.name}</td>
                   <td>${item?.price}</td>
                   <th>
-                    <button
-                      onClick={() => handleUpdateItem(item)}
-                      className="text-center"
-                    >
+                    <Link to={`/dashboard/updateItem/${item._id}`}>
                       <FaEdit className="text-2xl text-green-500 cursor-pointer" />
-                    </button>
+                    </Link>
                   </th>
                   <th>
                     <button onClick={() => handleDeleteItem(item)}>
