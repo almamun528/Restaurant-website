@@ -65,6 +65,7 @@ const CheckOut = () => {
           },
         }}
       />
+      {/* button  */}
       <button
         className="mt-3 btn btn-primary bg-amber-400 hover:bg-amber-700 text-white"
         type="submit"
